@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
+//use it for local development
+//const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const authMiddleware = require('./middlewares/authMiddleware');
@@ -8,8 +9,12 @@ const authMiddleware = require('./middlewares/authMiddleware');
 dotenv.config();
 
 const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+//for vercel deployment
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+//use it for local development
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public')); // Serve static files
 app.set('view engine', 'ejs'); // Set view engine
 
@@ -32,8 +37,11 @@ app.get('/dashboard', authMiddleware, (req, res) => {
     res.render('dashboard', { user: req.user });
   });
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// Start server on localhost:3000
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => {
+//   console.log(`Server running on http://localhost:${PORT}`);
+// });
+
+
+module.exports = app;
